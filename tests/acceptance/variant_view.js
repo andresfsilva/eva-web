@@ -80,6 +80,9 @@ function checkSummaryGrid(driver) {
         driver.findElement(By.id("variant-view-ale")).getText().then(function(text){
             assert(text).matches(/^[ACGT]+/);
         });
+        driver.findElement(By.id("variant-view-acc")).getText().then(function(text){
+            assert(text).matches(/^rs\d+$/);
+        });
 
     });
     return driver;

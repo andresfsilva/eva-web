@@ -194,6 +194,7 @@ EvaVariantView.prototype = {
         }
         var reference = '-';
         var alternate = '-';
+        var accession = '-';
 
         if (data[0].reference) {
             reference = _.escape(data[0].reference);
@@ -201,11 +202,15 @@ EvaVariantView.prototype = {
         if (data[0].alternate) {
             alternate = _.escape(data[0].alternate);
         }
+        if (data[0].ids) {
+            accession = _.findWhere(data[0].ids, 'rs');
+        }
 
         _summaryTable += '<tr><td class="header">Type</td><td id="variant-view-type">' + data[0].type + '</td></tr>' +
             '<tr><td class="header">Chromosome:Start-End</td><td id="variant-view-chr">' + data[0].chromosome + ':' + data[0].start + '-' + data[0].end + '</td></tr>' +
             '<tr><td class="header">Ref</td><td id="variant-view-ref">' + reference + '</td></tr>' +
             '<tr><td class="header">Alt</td><td id="variant-view-ale">' + alternate + '</td></tr>' +
+            '<tr><td class="header">Accession</td><td id="variant-view-acc">' + accession + '</td></tr>' +
             '</table>'
 
         _summaryTable += '</div></div>'
