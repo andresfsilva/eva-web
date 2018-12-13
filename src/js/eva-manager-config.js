@@ -200,3 +200,93 @@ var DgvaManager = {
         return url;
     }
 };
+
+var EvaVcfDumperManager = {
+    host: EVA_VCF_DUMPER_HOST,
+    version: EVA_VERSION,
+    get: function (args) {
+        var success = args.success;
+        var error = args.error;
+        var async = (_.isUndefined(args.async) || _.isNull(args.async) ) ? true : args.async;
+        var urlConfig = _.omit(args, ['success', 'error', 'async']);
+
+        var url = EvaManager.url(urlConfig);
+        if (typeof url === 'undefined') {
+            return;
+        }
+        console.log(url);
+
+        var d;
+        $.ajax({
+            type: 'GET',
+            url: url,
+            //contentType: 'application/octet-stream',
+            // dataType: 'json',
+            async: async,
+            success: function (data, textStatus, jqXHR) {
+                if ($.isPlainObject(data) || $.isArray(data)) {
+                    data.query = args.query;
+                    if (_.isFunction(success)) success(data);
+                    d = data;
+                } else {
+                    console.log('Eva vcf dumper returned a non json object or list, please check the url.');
+                    console.log(url);
+                    //console.log(data);
+                    //window.open(url, "_blank");
+                    window.location.href = url;
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log("EvaVcfDumperManager: Ajax call returned : " + errorThrown + '\t' + textStatus + '\t' + jqXHR.statusText + " END");
+                if (_.isFunction(error)) error(jqXHR, textStatus, errorThrown);
+                jqXHR.responseJSON ? Ext.Msg.alert('Error', jqXHR.responseJSON.userMessage) : Ext.Msg.alert('Error', textStatus);
+            }
+        });
+        return d;
+    },
+    url: function (args) {
+        if (!$.isPlainObject(args)) args = {};
+        if (!$.isPlainObject(args.params)) args.params = {};
+
+        var version = this.version;
+        if (typeof args.version !== 'undefined' && args.version != null) {
+            version = args.version
+        }
+
+        var host = this.host;
+        if (typeof args.host !== 'undefined' && args.host != null) {
+            host = args.host;
+        }
+
+        delete args.host;
+        delete args.version;
+
+        var config = {
+            host: host,
+            version: version
+        };
+
+        var params = {
+        };
+
+        _.extend(config, args);
+        _.extend(config.params, params);
+
+        var query = '';
+        if (typeof config.query !== 'undefined' && config.query != null) {
+            if ($.isArray(config.query)) {
+                config.query = config.query.toString();
+            }
+            query = '/' + config.query;
+        }
+
+        // the resource is just added if is not null to avoid composing URLS  like "query/?param=..."
+        if (typeof config.resource !== 'undefined' && config.resource != null) {
+            query = query + '/' + config.resource;
+        }
+
+        var url = config.host + '/' + config.version + '/' + config.category + query;
+        url = Utils.addQueryParamtersToUrl(config.params, url);
+        return url;
+    }
+};

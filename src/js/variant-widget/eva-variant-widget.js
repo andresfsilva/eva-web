@@ -479,6 +479,23 @@ EvaVariantWidget.prototype = {
             }
         };
 
+        // var exportVCFButton = {
+        //     xtype: 'button',
+        //     text: 'Export as VCF <span class="badge" style="border-radius:30%;padding:0.1em;font-size:10px">beta</span>',
+        //     style: {
+        //         borderStyle: 'solid'
+        //     },            
+        //     listeners: {
+        //         click: {
+        //             fn: function () {
+        //                 var vcf_dumper_url = EVA_VCF_DUMPER_HOST + '/' + EVA_VERSION + '/segments/' + _this.values.region + '/variants?species=' +  _this.values.species + '&studies=' + _this.values.studies;
+        //                 console.log(vcf_dumper_url);
+        //                 window.open(vcf_dumper_url);
+        //             }
+        //         }
+        //     }
+        // };
+
         var exportVCFButton = {
             xtype: 'button',
             text: 'Export as VCF <span class="badge" style="border-radius:30%;padding:0.1em;font-size:10px">beta</span>',
@@ -488,8 +505,28 @@ EvaVariantWidget.prototype = {
             listeners: {
                 click: {
                     fn: function () {
-                        var vcf_dumper_url = EVA_VCF_DUMPER_HOST + '/' + EVA_VERSION + '/segments/' + _this.values.region + '/variants?species=' +  _this.values.species + '&studies=' + _this.values.studies;
-                        window.open(vcf_dumper_url);
+                        // var vcf_dumper_url = EVA_VCF_DUMPER_HOST + '/' + EVA_VERSION + '/segments/' + _this.values.region + '/variants?species=' +  _this.values.species + '&studies=' + _this.values.studies;
+                        // console.log(vcf_dumper_url);
+                        // window.open(vcf_dumper_url);
+                        EvaVcfDumperManager.get({
+                            host: 'http://localhost:8080/vcf_dumper', //EVA_VCF_DUMPER_HOST,
+                            version: EVA_VERSION,
+                            //type: 'application/octet-stream',
+                            
+                            category: 'segments/' + _this.values.region + '/variants',
+                            params: { species : _this.values.species, studies : _this.values.studies },
+                            success: function (response) {
+                                try {
+                                    console.log('suc');
+                                    // console.log(response);
+                                } catch (e) {
+                                    console.log('errorr');
+                                    console.log(e);
+                                }
+                            },
+                              
+                        });              
+
                     }
                 }
             }
