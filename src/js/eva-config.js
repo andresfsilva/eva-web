@@ -117,6 +117,7 @@ function getReverseMap (forwardMap) {
 
 DISABLE_STUDY_LINK = ['PRJX00001'];
 ACCESSIONING_SERVICE = 'accessioning-service';
+METADATA_SERVICE = "metadata-service";
 VARIANT_TYPE_SO_MAP = {"SNV": "SO:0001483",
                        "DEL": "SO:0000159",
                        "INS": "SO:0000667",

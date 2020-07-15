@@ -76,6 +76,7 @@ module.exports = function (grunt) {
                         'EVA_HOST': 'wwwdev.ebi.ac.uk/eva/webservices/rest',
                         'EVA_ACCESSIONING_HOST': 'wwwdev.ebi.ac.uk/eva/webservices/identifiers',
                         'EVA_VCF_DUMPER_HOST': 'wwwdev.ebi.ac.uk/eva/webservices/vcf-dumper',
+                        'EVA_METADATA_HOST': 'localhost:8080',
                         'EVA_VERSION': 'v1'
                     }
                 }
@@ -130,6 +131,10 @@ module.exports = function (grunt) {
                         {
                             match: 'EVA_VERSION',
                             replacement: '<%= grunt.config.get("EVA_VERSION") %>'
+                        },
+                        {
+                            match: 'EVA_METADATA_HOST',
+                            replacement: '<%= grunt.config.get("EVA_METADATA_HOST") %>'
                         }
                     ]
                 },

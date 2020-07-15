@@ -265,7 +265,8 @@ EvaStudyBrowserWidgetPanel.prototype = {
         this.studyColumns = [
             {
                 text: "ID",
-                dataIndex: 'id',
+                // dataIndex: 'id',
+                dataIndex: 'studyIds',
                 flex: 2.2,
                 // To render a link to FTP
                 renderer: function (value, meta, rec, rowIndex, colIndex, store) {
@@ -313,12 +314,14 @@ EvaStudyBrowserWidgetPanel.prototype = {
                 text: 'Submitted <br/>Files',
                 //dataIndex: 'id',
                 xtype: 'templatecolumn',
-                tpl: '<tpl><a href="https://www.ebi.ac.uk/ena/data/view/{id}" target="_blank" class="image-link"><img src="//www.ebi.ac.uk/sites/ebi.ac.uk/files/groups/ena/logos/ena_small.png" alt="European Nucleotide Archive" width="60"/></a></tpl>',
+                // tpl: '<tpl><a href="https://www.ebi.ac.uk/ena/data/view/{id}" target="_blank" class="image-link"><img src="//www.ebi.ac.uk/sites/ebi.ac.uk/files/groups/ena/logos/ena_small.png" alt="European Nucleotide Archive" width="60"/></a></tpl>',
+                tpl: '<tpl><a href="https://www.ebi.ac.uk/ena/data/view/{studyIds}" target="_blank" class="image-link"><img src="//www.ebi.ac.uk/sites/ebi.ac.uk/files/groups/ena/logos/ena_small.png" alt="European Nucleotide Archive" width="60"/></a></tpl>',
                 flex: 1.5
             },
             {
                 text: "Browsable <br/>Files",
-                dataIndex: 'id',
+                // dataIndex: 'id',
+                dataIndex: 'studyIds',
                 flex: 1.5,
                 renderer: function (value, p, record) {
                     var browsable_link = '<img style="opacity:0.2" class="eva-grid-img-inactive" src="img/eva_logo.png" width="20"/>';
@@ -417,6 +420,7 @@ EvaStudyBrowserWidgetPanel.prototype = {
                         statsData[key] = arr;
                         statsData[key] = _.sortBy(statsData[key], 'display');
                         _this.speciesFilter.store.loadRawData(statsData['species']);
+                        console.log(statsData);
                         _this.typeFilter.store.loadRawData(statsData['type']);
                         data = statsData;
                     }
@@ -450,6 +454,23 @@ EvaStudyBrowserWidgetPanel.prototype = {
                 _this.resize(true);
             }
         });
+
+        manager.get({
+            category: 'projects',
+            service: METADATA_SERVICE,
+            async: false,
+            success: function (response) {
+                try {
+                    all_projects = response._embedded.projects;
+                    console.log(all_projects);
+                } catch (e) {
+                    console.log(e);
+                }
+                _this.studyBrowserWidget.load(all_projects)
+                _this.resize(true);
+            }
+        });
+
     },
 
     _updateColumns: function (params) {
@@ -560,7 +581,8 @@ EvaStudyBrowserWidgetPanel.prototype = {
             var regex = new RegExp(value, "i");
             store.reload({start:0, limit:store.totalCount})
             store.filterBy(function (e) {
-                return regex.test(e.get('id')) || regex.test(e.get('name')) || regex.test(e.get('description'));
+                // return regex.test(e.get('id')) || regex.test(e.get('name')) || regex.test(e.get('description'));
+                return regex.test(e.get('studyIds')) || regex.test(e.get('name')) || regex.test(e.get('description'));
             });
         }
     }

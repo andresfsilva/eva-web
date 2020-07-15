@@ -42,6 +42,24 @@ EvaStudyView.prototype = {
         }
 
         manager.get({
+            category: 'projects/search/accession',
+            service: METADATA_SERVICE,
+            // query: this.projectId,
+            params: {accession : this.projectId},
+            async: false,
+            success: function (response) {
+                try {
+                    console.log('new metadata');
+                    console.log(response);
+                    // summary = response.response[0].result;
+                    new_project = response;
+                } catch (e) {
+                    console.log(e);
+                }
+            }
+        });        
+
+        manager.get({
             category: 'studies',
             resource: 'summary',
             query: this.projectId,
@@ -192,13 +210,13 @@ EvaStudyView.prototype = {
                 projectURL = '<a href="' + _this._getProjectUrl(data.summaryData[0].id) + '" target="_blank">' + _this._getProjectUrl(data.summaryData[0].id) + '</a><br />';
             }
 
-            var _filesTable = '<div><h3>' + data.summaryData[0].name + '</h3>' +
+            var _filesTable = '<div><h3>' + new_project.name + '</h3>' +
                 '<span class="row study-view-data"><div class="medium-12 columns"><div><h4>General Information</h4></div><table id="summaryTable" class="table table-bordered study-view-table">' +
                 '<thead><tr><th class="col-name"></th><th class="col-value"></th></tr></thead><tbody>' +
                 '<tr><td><b>Genome</b></td><td><span id="organism-span">' + data.summaryData[0].speciesCommonName + '</span></td></tr>' +
                 '<tr><td><b>Sample(s)</b></td><td><span id="scientific-name-span">' + data.summaryData[0].speciesScientificName + '</span></td></tr>' +
                 '<tr><td><b>Taxonomy ID</b></td><td><span id="taxonomy-id-span">' + taxonomyId.join(", ") + '</span></td></tr>' +
-                '<tr><td><b>Center</b></td><td><span id="center-span">' + data.summaryData[0].center + '</span></td></tr>' +
+                '<tr><td><b>Center</b></td><td><span id="center-span">' + new_project.center + '</span></td></tr>' +
                 '<tr><td><b>Material</b></td><td><span id="material-span">' + data.summaryData[0].material + '</span></td></tr>' +
                 '<tr><td><b>Scope</b></td><td><span id="scope-span">' + data.summaryData[0].scope + '</span></td></tr>' +
                 '<tr><td><b>Type</b></td><td><span id="type-span">' + data.summaryData[0].experimentType + '</span></td></tr>' +
@@ -206,7 +224,8 @@ EvaStudyView.prototype = {
                 '<tr><td><b>Source Type</b></td><td><span id="source-type-span">' + data.summaryData[0].sourceType + '</span></td></tr>' +
                 '<tr><td><b>Platform</b></td><td><span id="platform-span">' + data.summaryData[0].platform + '</span></td></tr>' +
                 '<tr><td><b>Number of samples</b></td><td><span id="samples-span">' + data.summaryData[0].numSamples + '</span></td></tr>' +
-                '<tr><td><b>Description</b></td><td><span id="description-span">' + data.summaryData[0].description + '</span></td></tr>' +
+                // '<tr><td><b>Description</b></td><td><span id="description-span">' + data.summaryData[0].description + '</span></td></tr>' +
+                '<tr><td><b>Description</b></td><td><span id="description-span">' + new_project.description + '</span></td></tr>' +
                 '<tr><td><b>Resource</b></td><td><span id="resource-span">' + projectURL + '</div></td></tr>' +
                 '<tr><td><b>Download</b></td><td><span id="download-span">' + ena_link + '<br /><br />' + eva_link + '</span></td></tr>' +
                 '<tr><td><span><b>Publications</b></span></td><td>' + pubLinks + '</tr>' +

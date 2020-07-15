@@ -24,6 +24,7 @@ DGVA_HOST = "https:" + "//@@DGVA_HOST";
 EVA_HOST = "https:" + "//@@EVA_HOST";
 EVA_ACCESSIONING_HOST = "https:" + "//@@EVA_ACCESSIONING_HOST";
 EVA_VCF_DUMPER_HOST = "https:" + "//@@EVA_VCF_DUMPER_HOST";
+EVA_METADATA_HOST = "http:" + "//@@EVA_METADATA_HOST";
 
 DBSNP_VERSION = '@@DBSNP_VERSION';
 DGVA_VERSION = '@@DGVA_VERSION';
@@ -32,6 +33,7 @@ EVA_VERSION = '@@EVA_VERSION';
 var EvaManager = {
     host: EVA_HOST,
     accessioning_host: EVA_ACCESSIONING_HOST,
+    metadata_host: EVA_METADATA_HOST,
     version: EVA_VERSION,
     getAPICallResult: function(url, apiResultType, errorHandler) {
           var d;
@@ -99,6 +101,9 @@ var EvaManager = {
         if (args.service === ACCESSIONING_SERVICE) {
             host = this.accessioning_host;
         }
+        if (args.service === METADATA_SERVICE) {
+            host = this.metadata_host;
+        }
 
         delete args.host;
         delete args.version;
@@ -128,6 +133,10 @@ var EvaManager = {
         }
 
         var url = config.host + '/' + config.version + '/' + config.category + query;
+        if (args.service === METADATA_SERVICE) {
+            var url = config.host + '/' + config.category + query;
+        }
+        
         url = Utils.addQueryParamtersToUrl(config.params, url);
         return url;
     }

@@ -258,7 +258,7 @@ EvaStudyBrowserGrid.prototype = {
         if(!_.isUndefined(data)) {
             for (var i = 0; i < data.length; i++) {
                 var variant = data[i];
-
+                
                 if (variant.hgvs && variant.hgvs.genomic && variant.hgvs.genomic.length > 0) {
                     variant.hgvs_name = variant.hgvs.genomic[0];
                 }
